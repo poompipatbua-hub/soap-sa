@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>บ้านสบู่ — สบู่ธรรมชาติ</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top"><a class="brand" href="#">บ้านสบู่<span>BAAN SOAP</span></a><nav><a href="#shop">สินค้า</a><a href="#about">เกี่ยวกับเรา</a><button class="cart-button" id="openCart">ตะกร้า <b id="cartCount">0</b></button></nav></header>
+<main>
+<section class="hero"><div><p class="eyebrow">NATURAL CARE • EVERYDAY GLOW</p><h1>ดูแลผิวอย่างอ่อนโยน<br>เริ่มต้นจากธรรมชาติ</h1><p>สบู่ทำความสะอาดผิว พร้อมเติมความสดชื่นในทุกวัน</p><a class="primary" href="#shop">เลือกซื้อสินค้า</a></div><div class="hero-art"><div class="soap soap-a">BAAN<br>SOAP</div><div class="soap soap-b">NATURAL</div><span class="leaf">✳</span></div></section>
+<section id="shop" class="section"><div class="section-head"><div><p class="eyebrow">OUR PRODUCTS</p><h2>เลือกสบู่ที่ใช่สำหรับคุณ</h2></div><p>ผลิตภัณฑ์ตัวอย่าง 2 SKU</p></div><div id="products" class="products"></div></section>
+<section id="about" class="about"><p class="eyebrow">ABOUT BAAN SOAP</p><h2>เรียบง่าย อ่อนโยน ใส่ใจทุกก้อน</h2><p>ร้านสบู่ตัวอย่างสำหรับโปรเจกต์การขายออนไลน์ สามารถแก้ไขชื่อร้าน รายละเอียดสินค้า ราคา และรูปภาพได้</p></section>
+</main>
+<footer>© 2026 BAAN SOAP · Sample online soap store</footer>
+<div class="overlay" id="cartOverlay"><aside class="drawer"><button class="close" id="closeCart">×</button><h2>ตะกร้าสินค้า</h2><div id="cartItems"></div><div class="total">รวมทั้งสิ้น <b id="cartTotal">฿0</b></div>
+<form id="checkout"><h3>ข้อมูลจัดส่ง</h3><input name="customer" placeholder="ชื่อผู้รับ" required><input name="phone" placeholder="เบอร์โทรศัพท์" required><textarea name="address" placeholder="ที่อยู่จัดส่ง (บ้านเลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์)" required></textarea><button class="primary full" type="submit">ยืนยันคำสั่งซื้อ</button><small id="checkoutMsg"></small></form></aside></div>
+<script src="app.js"></script></body></html>

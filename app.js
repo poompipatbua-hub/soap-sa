@@ -1,0 +1,17 @@
+// ใส่ URL ของ Google Apps Script Web App หลังจาก Deploy ที่ตัวแปรนี้
+const API_URL = "";
+const PRODUCTS = [
+ {sku:"SOAP-001",name:"สบู่น้ำผึ้งธรรมชาติ",desc:"ทำความสะอาดผิว พร้อมกลิ่นหอมละมุน",price:89,emoji:"🍯",tone:"honey"},
+ {sku:"SOAP-002",name:"สบู่ว่านหางจระเข้",desc:"สบู่สูตรอ่อนโยน ให้ความรู้สึกสดชื่น",price:99,emoji:"🌿",tone:"aloe"}
+];
+let cart=[];
+const money=n=>"฿"+Number(n).toLocaleString("th-TH");
+function renderProducts(){document.querySelector("#products").innerHTML=PRODUCTS.map(p=>`<article class="product"><div class="product-art"><span>${p.emoji}</span></div><div class="product-info"><p class="eyebrow">${p.sku}</p><h3>${p.name}</h3><p class="muted">${p.desc}</p><div class="price">${money(p.price)}</div><button class="primary" onclick="addToCart('${p.sku}')">เพิ่มลงตะกร้า</button></div></article>`).join("")}
+function addToCart(sku){let found=cart.find(x=>x.sku===sku);found?found.qty++:cart.push({sku,qty:1});renderCart();document.querySelector("#cartOverlay").classList.add("show")}
+function renderCart(){document.querySelector("#cartCount").textContent=cart.reduce((a,x)=>a+x.qty,0);document.querySelector("#cartItems").innerHTML=cart.length?cart.map(x=>{let p=PRODUCTS.find(p=>p.sku===x.sku);return `<div class="cart-line"><div><b>${p.name}</b><div class="muted">${money(p.price)} × ${x.qty}</div></div><div><b>${money(p.price*x.qty)}</b><br><button onclick="changeQty('${x.sku}',-1)">−</button> <button onclick="changeQty('${x.sku}',1)">+</button> <button onclick="removeItem('${x.sku}')">ลบ</button></div></div>`}).join(""):"<p>ยังไม่มีสินค้าในตะกร้า</p>";document.querySelector("#cartTotal").textContent=money(cart.reduce((a,x)=>a+PRODUCTS.find(p=>p.sku===x.sku).price*x.qty,0))}
+function changeQty(s,d){let x=cart.find(x=>x.sku===s);x.qty+=d;if(x.qty<=0)removeItem(s);else renderCart()}
+function removeItem(s){cart=cart.filter(x=>x.sku!==s);renderCart()}
+document.querySelector("#openCart").onclick=()=>document.querySelector("#cartOverlay").classList.add("show");
+document.querySelector("#closeCart").onclick=()=>document.querySelector("#cartOverlay").classList.remove("show");
+document.querySelector("#checkout").onsubmit=async e=>{e.preventDefault();if(!cart.length){alert("กรุณาเลือกสินค้าก่อน");return}let f=new FormData(e.target);let order={customer:f.get("customer"),phone:f.get("phone"),address:f.get("address"),items:cart.map(x=>({...x,product:PRODUCTS.find(p=>p.sku===x.sku).name,unitPrice:PRODUCTS.find(p=>p.sku===x.sku).price})),total:cart.reduce((a,x)=>a+PRODUCTS.find(p=>p.sku===x.sku).price*x.qty,0),createdAt:new Date().toISOString()};let msg=document.querySelector("#checkoutMsg");try{if(!API_URL){let local=JSON.parse(localStorage.getItem("soapOrders")||"[]");order.orderId="DEMO-"+Date.now();local.push(order);localStorage.setItem("soapOrders",JSON.stringify(local));msg.textContent="บันทึกคำสั่งซื้อในโหมดตัวอย่างแล้ว (ยังไม่ได้เชื่อม Google Sheets)";}else{let r=await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"newOrder",order})});let data=await r.json();if(!data.ok)throw Error(data.error||"บันทึกไม่สำเร็จ");msg.textContent="สั่งซื้อสำเร็จ เลขที่ "+data.orderId}cart=[];renderCart();e.target.reset()}catch(err){msg.textContent="เกิดข้อผิดพลาด: "+err.message}};
+renderProducts();renderCart();
